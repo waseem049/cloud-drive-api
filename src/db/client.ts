@@ -1,7 +1,8 @@
 import { Pool, type PoolClient } from "pg";
+import { env } from "../utils/env";
 
-const dbUrl = process.env.DATABASE_URL;
-console.log('Connecting to:', dbUrl?.replace(/\/\/.*:/, '//***:'));
+const dbUrl = env().DATABASE_URL;
+console.log("Connecting to:", dbUrl.replace(/\/\/.*:/, "//***:"));
 
 export const pool = new Pool({
     connectionString: dbUrl,

@@ -23,6 +23,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { env } from "./utils/env";
 import { testDbConnection } from './db/client';
 import { applyIdempotentSchemaPatches } from './db/schemaPatches';
 import { errorHandler } from './middleware/errorHandler';
@@ -40,7 +41,8 @@ import { profileRouter } from './routes/profile';
 import { bulkRouter } from './routes/bulk';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const ENV = env();
+const PORT = ENV.PORT || 5000;
 
 // ── 1. Security Headers ──────────────────────────────────────
 // Helmet sets HTTP headers like X-Content-Type-Options, X-Frame-Options,
@@ -57,7 +59,7 @@ app.use(requestLogger);
 // to call the backend (port 5000) across different origins.
 // `credentials: true` is required for cookies to be sent cross-origin.
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: ENV.CORS_ORIGIN || 'http://localhost:3000',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -97,7 +99,7 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'ok',
         timeStamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
+        environment: ENV.NODE_ENV,
     });
 });
 
@@ -107,7 +109,7 @@ app.use(errorHandler);
 
 // ── Server Start ─────────────────────────────────────────────
 app.listen(PORT, async () => {
-    logger.info('server_started', { port: PORT, env: process.env.NODE_ENV });
+    logger.info('server_started', { port: PORT, env: ENV.NODE_ENV });
     await testDbConnection();
     try {
         await applyIdempotentSchemaPatches();

@@ -2,9 +2,10 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
+import { env } from "./env";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET!;
+const JWT_SECRET = env().JWT_SECRET;
+const REFRESH_TOKEN_SECRET = env().JWT_REFRESH_SECRET;
 
 export type TokenPaload = {
     userId: string;

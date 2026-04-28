@@ -1,11 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 dotenv.config();
+import { env } from "../utils/env";
 
 // Service role client - bypasses RLS policies, should only be used in server-side code
 const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    env().SUPABASE_URL,
+    env().SUPABASE_SERVICE_ROLE_KEY
 );
 
 const BUCKET = 'drive';
