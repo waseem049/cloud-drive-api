@@ -1,4 +1,4 @@
-import {Pool} from 'pg';
+import { Pool, type PoolClient } from "pg";
 
 const dbUrl = process.env.DATABASE_URL;
 console.log('Connecting to:', dbUrl?.replace(/\/\/.*:/, '//***:'));
@@ -10,6 +10,10 @@ export const pool = new Pool({
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
 });
+
+export async function getClient(): Promise<PoolClient> {
+    return pool.connect();
+}
 
 // Generic query helper - always releases connection back to the pool
 export async function query<T = any>(

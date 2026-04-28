@@ -35,7 +35,10 @@ export function errorHandler(
     }
 
     // Unexpecte error - log it, don't expose internals to client
-    console.error('Unexpected error:', err);
+    import('../utils/logger').then(({ logger }) => {
+        logger.error('unexpected_error', { error: err.stack || err.message });
+    });
+    
     res.status(500).json({ 
         error: Errors.INTERNAL_SERVER_ERROR.code, message: Errors.INTERNAL_SERVER_ERROR.message 
     });
